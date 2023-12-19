@@ -1,0 +1,39 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+ @model Rh
+
+<h2>Complete Your profile</h2>
+
+<form asp-action="CompeleteProfile" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <!-- Left side -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="adresse"></label>
+                <input asp-for="adresse" class="form-control" />
+                <span asp-validation-for="adresse"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="website"></label>
+                <input asp-for="website" class="form-control" />
+                <span asp-validation-for="website"></span>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
