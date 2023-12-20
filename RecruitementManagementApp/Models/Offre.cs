@@ -12,7 +12,6 @@ namespace RecruitementManagementApp.Models
         public bool published { get; set; }=false;
         public bool archived { get; set; } = false;
         public ICollection<CandidatOffre> candidatOffres { get; set; }
-        
         public int nameRh { get; set; }
         public virtual Rh? LeRh { get; set; }
     }
