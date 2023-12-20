@@ -9,6 +9,22 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+
+@* <form class="form-inline my-2 my-lg-0" asp-controller="Offres" asp-action="FilterOffre" style="padding-right: 25px;">
+    <div class="col">
+        <input name="searchString" type="text" class="form-control" placeholder="Search for a actors..." aria-label="Recipient's username" aria-describedby="button-addon2">
+    </div>
+
+</form> *@
+@using (Html.BeginForm())
+{
+    <p>
+        Genre: @Html.DropDownList("type", "ALL")
+        Title: @Html.TextBox("titre")
+        <input type="submit" value="Find" />
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
