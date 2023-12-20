@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecruitementManagementApp.Models;
@@ -72,23 +73,35 @@ namespace RecruitementManagementApp.Controllers
             {
                 // Store user ID in session
                 HttpContext.Session.SetInt32("UserId", user.Id);
+                HttpContext.Session.SetString("UserRole", user.Role);
             }
 
             if (user.Role == "Entreprise")
 
             {
-                if(user.profilecompleted==false)
+                if (user.profilecompleted == false)
                 {
                     return RedirectToAction("CompeleteProfile", "Rh");
                 }
                 // Redirect to a protected resource or the home page after successful login
                 // return RedirectToPage("Index", "Offres");
 
-                return RedirectToAction("Index","Offres");
+                return RedirectToAction("Index", "Offres");
             }
-            
-            //return RedirectToAction("CompleteProfile", "Rh");
-                return RedirectToAction("Index", "Home");
+            else
+            {
+                if (user.profilecompleted == false)
+                {
+                    return RedirectToAction("CompeleteProfile", "Candidat");
+                }
+                // Redirect to a protected resource or the home page after successful login
+                // return RedirectToPage("Index", "Offres");
+
+                //  return RedirectToAction("Index", "Offres");
+
+                //return RedirectToAction("CompleteProfile", "Rh");
+                return RedirectToAction("AllOffres", "Candidat");
+            }
         }
         private bool VerifyPassword(string enteredPassword, string storedPasswordHash)
             {
@@ -97,10 +110,22 @@ namespace RecruitementManagementApp.Controllers
                 // For demonstration purposes, let's assume a simple string comparison
                 return enteredPassword == storedPasswordHash;
             }
+        public IActionResult Logout()
+        {
+       
 
+            // Optionally, clear session data or perform additional logout-related tasks
+            HttpContext.Session.Clear();
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
 
-            // GET: UserController
-            public ActionResult Index()
+            // Redirect to the login page or any other desired destination
+            return RedirectToAction("Login", "User");
+        }
+
+        // GET: UserController
+        public ActionResult Index()
         {
             return View();
         }

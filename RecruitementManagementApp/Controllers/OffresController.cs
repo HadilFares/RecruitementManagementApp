@@ -19,6 +19,11 @@ namespace RecruitementManagementApp.Controllers
             _context = context;
         }
 
+
+
+        
+
+
         // GET: Offres
         public async Task<IActionResult> Index()
         {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitementManagementApp.Models;
 
@@ -11,9 +12,11 @@ using RecruitementManagementApp.Models;
 namespace RecruitementManagementApp.Migrations
 {
     [DbContext(typeof(RecruitementDbContext))]
-    partial class RecruitementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231219204540_updateoffreandcandidatoffre")]
+    partial class updateoffreandcandidatoffre
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,6 +70,10 @@ namespace RecruitementManagementApp.Migrations
                     b.Property<int>("codeOffre")
                         .HasColumnType("int");
 
+                    b.Property<string>("QuestionsResponse")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -86,6 +93,10 @@ namespace RecruitementManagementApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("codeOffre"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Questions")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

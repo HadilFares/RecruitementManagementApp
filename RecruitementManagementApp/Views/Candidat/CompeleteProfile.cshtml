@@ -1,0 +1,54 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+ @model Candidat
+
+<h2>Complete Your profile</h2>
+
+<form asp-action="CompeleteProfile" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <!-- Left side -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="DateNaiss"></label>
+                <input asp-for="DateNaiss" class="form-control" type="date" />
+                <span asp-validation-for="DateNaiss"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="University"></label>
+                <input asp-for="University" class="form-control" />
+                <span asp-validation-for="University"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Langage"></label>
+                <input asp-for="Langage" class="form-control" />
+                <span asp-validation-for="Langage"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stagesexpercience"></label>
+                <input asp-for="Stagesexpercience" class="form-control" />
+                <span asp-validation-for="Stagesexpercience"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Githuburl"></label>
+                <input asp-for="Githuburl" class="form-control" />
+                <span asp-validation-for="Githuburl"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Frameworks"></label>
+                <input asp-for="Frameworks" class="form-control" />
+                <span asp-validation-for="Frameworks"></span>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
