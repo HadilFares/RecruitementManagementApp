@@ -6,10 +6,24 @@
 
 <h1>AllOffres</h1>
 
+@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+{
+    <div id="notificationMessage" class="alert @(TempData["SuccessMessage"] != null ? "alert-success" : "alert-danger")">
+        @(TempData["SuccessMessage"] ?? TempData["ErrorMessage"])
+    </div>
+
+    <script>
+        // Automatically hide the notification message after 5 seconds
+        setTimeout(function () {
+            $('#notificationMessage').fadeOut('slow');
+        }, 5000);
+    </script>
+}
+
 
 <form class="form-inline my-2 my-lg-0" asp-controller="Candidat" asp-action="FilterOffre" style="padding-right: 25px;">
     <div class="col">
-        <input name="searchString" type="text" class="form-control" placeholder="Search for a actors..." aria-label="Recipient's username" aria-describedby="button-addon2">
+        <input name="searchString" type="text" class="form-control" placeholder="Search for offers..." aria-label="Recipient's username" aria-describedby="button-addon2">
     </div>
     
 </form>
@@ -44,7 +58,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.LeRh.Name)
             </td>
-            
+
+                <td>
+                    <a asp-action="Details" asp-controller="Candidat" asp-route-id="@item.codeOffre">Details</a>
+                    <a asp-action="Postuler" asp-controller="Candidat" asp-route-id="@item.codeOffre">Postuler</a>
+                 
+                  
+
+                </td>
         </tr>
 }
     </tbody>

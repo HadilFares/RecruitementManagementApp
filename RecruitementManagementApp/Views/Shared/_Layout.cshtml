@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RecruitementManagementApp.styles.css" asp-append-version="true" />
+    <!-- Include Toastr CSS and JS files in your HTML layout -->
+    
 </head>
 <body>
     <header>
@@ -23,8 +25,9 @@
                         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                             <ul class="navbar-nav flex-grow-1">
                                 <ul class="navbar-nav flex-grow-1">
-                                    <li class="nav-item"><a class="nav-link text-dark" href="/">Home</a></li>
-                                    <li class="nav-item"><a class="nav-link text-dark" href="/Dashboard">Dashboard</a></li>
+                                    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Offres" asp-action="Index">My Offres</a></li>
+                                    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Rh" asp-action="lescandidaturesSelonOffre">les candidatures Selon Offres </a></li>
+
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
                                     </li>
@@ -42,8 +45,8 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <ul class="navbar-nav flex-grow-1">
-                                <li class="nav-item"><a class="nav-link text-dark" href="/">HomeCandidat</a></li>
-                                <li class="nav-item"><a class="nav-link text-dark" href="/Dashboard">Dashboard</a></li>
+                                    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Candidat" asp-action="AllOffres">Offres Disponibles</a></li>
+                                    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Candidat" asp-action="Suivremescandidatures">Suivremescandidatures</a></li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
                                 </li>

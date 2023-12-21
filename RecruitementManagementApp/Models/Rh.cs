@@ -7,6 +7,7 @@ namespace RecruitementManagementApp.Models
 
         public int IdRh { get; set; }
         [Required]
+        [Display(Name = "CompanyName")]
         public string Name { get; set; }
         [Required]
         public string adresse { get; set; }

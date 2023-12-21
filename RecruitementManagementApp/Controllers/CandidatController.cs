@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecruitementManagementApp.Models;
+using System.Net.NetworkInformation;
 
 namespace RecruitementManagementApp.Controllers
 {
@@ -18,6 +19,7 @@ namespace RecruitementManagementApp.Controllers
         {
             return View();
         }
+        //TempData["message"]="Postuled successfully"
 
 
         [HttpGet]
@@ -61,7 +63,7 @@ namespace RecruitementManagementApp.Controllers
         {
 
 
-            var recruitementDbContext = _context.Offres.Include(o => o.LeRh);
+            var recruitementDbContext = _context.Offres.Include(o => o.LeRh).Where(o=>o.published);
 
             return View(await recruitementDbContext.ToListAsync());
         }
@@ -70,7 +72,7 @@ namespace RecruitementManagementApp.Controllers
 
         public async Task<IActionResult> FilterOffre(string searchString)
         {
-            var alloffres = await _context.Offres.Include(o => o.LeRh).ToListAsync();
+            var alloffres = await _context.Offres.Include(o => o.LeRh).Where(o => o.published==true).ToListAsync();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -82,21 +84,83 @@ namespace RecruitementManagementApp.Controllers
         }
 
 
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Offres == null)
+            {
+                return NotFound();
+            }
+
+            var offre = await _context.Offres
+                .Include(o => o.LeRh)
+                .FirstOrDefaultAsync(m => m.codeOffre == id);
+            if (offre == null)
+            {
+                return NotFound();
+            }
+
+            return View(offre);
+        }
+
+        [Route("Candidat/Postuler/{codeOffre}")]
+
+        public async Task<IActionResult> Postuler(int? codeOffre)
+        {
+            if (codeOffre == null || _context.Offres == null)
+            {
+                return NotFound();
+            }
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            var recruitmentDbContext = _context.Offres.Include(o => o.LeRh).Where(o => o.published==true);
+
+            bool hasAlreadyApplied = _context.candidatOffres
+             .Any(co => co.IdCandidat == userId && co.codeOffre == codeOffre);
+
+            if (hasAlreadyApplied)
+            {
+                TempData["ErrorMessage"] = "You have already applied for this job offer.";
+                return RedirectToAction("AllOffres", await recruitmentDbContext.ToListAsync());
+            }
+
+            CandidatOffre oc = new CandidatOffre
+            {
+                IdCandidat = userId.Value ,
+                codeOffre = (int)codeOffre,
+                Status = ApplicationStatus.EnAttente
+            };
+            _context.candidatOffres.Add(oc);
+            _context.SaveChanges();
+           
+          //  var recruitmentDbContext = _context.Offres.Include(o => o.LeRh);
+            TempData["SuccessMessage"] = "Operation was successful.";
 
 
+            return View("AllOffres", await recruitmentDbContext.ToListAsync());
+        }
 
 
+        public async Task<IActionResult> Suivremescandidatures( )
+        {
+            
+            var userId = HttpContext.Session.GetInt32("UserId");
 
 
+            var candidatures = _context.candidatOffres
+         .Where(co => co.IdCandidat == userId)
+         .Include(co => co.Offre.LeRh);
+         
+
+            return View ("Suivremescandidatures", candidatures);
+
+          
+        }
 
 
 
 
         // GET: CandidatController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+
 
         // GET: CandidatController/Create
         public ActionResult Create()

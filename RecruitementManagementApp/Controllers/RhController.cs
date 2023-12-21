@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RecruitementManagementApp.Models;
 
@@ -28,19 +29,6 @@ namespace RecruitementManagementApp.Controllers
 
             if (userId.HasValue)
             {
-                // Create an Rh entity and set its properties
-              /* var rh = new Rh
-                {
-                    // Set other properties as needed
-                    IdRh = userId.Value,
-                    Name=newdata.Name,
-                    adresse=newdata.adresse,
-                    website=newdata.website
-                    // Set UserId property to the retrieved user ID
-                };
-               */
-
-                // Add the Rh entity to the context and save changes
                 rh.IdRh= userId.Value;
              
                 _context.RHs.Add(rh);
@@ -53,13 +41,76 @@ namespace RecruitementManagementApp.Controllers
                 }
 
 
-                // ... the rest of your code ...
+                
             }
 
 
 
             return RedirectToAction("Index", "Offres");
         }
+
+
+        public async Task<IActionResult> lescandidaturesSelonOffre()
+        {
+           
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var candidatures = _context.candidatOffres
+            .Where(co => co.Offre.nameRh == userId.Value)
+             .Include(co => co.Offre.candidatOffres)
+             .ThenInclude(co => co.Candidat)
+             .ToList();
+            return View("lescandidaturesSelonOffre", candidatures);
+
+
+
+        }
+
+
+
+     
+
+        //[Route("Rh/Edit/{codeOffre&IdCandidat}")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? codeOffre, int? IdCandidat)
+        {
+            if (codeOffre == null || IdCandidat == null || _context.candidatOffres == null)
+            {
+                return NotFound();
+            }
+
+            var offreCandidate = await _context.candidatOffres.Include(o => o.Candidat)
+                .Include(o => o.Offre)
+                .FirstOrDefaultAsync(m => m.IdCandidat == IdCandidat && m.codeOffre == codeOffre); ;
+            if (offreCandidate == null)
+            {
+                return NotFound();
+            }
+            ViewData["IdCandidat"] = new SelectList(_context.Candidats, "Id", "Id", offreCandidate.IdCandidat);
+            ViewData["codeOffre"] = new SelectList(_context.Offres, "Id", "Id", offreCandidate.codeOffre);
+            return View(offreCandidate);
+        }
+
+       
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("IdCandidat,codeOffre,Status")] CandidatOffre candidateoffre)
+        {
+
+
+            try
+            {
+                _context.Update(candidateoffre);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+               
+            }
+            return RedirectToAction(nameof(lescandidaturesSelonOffre));
+
+            
+        }
+
 
 
 
@@ -98,26 +149,7 @@ namespace RecruitementManagementApp.Controllers
             }
         }
 
-        // GET: RhController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: RhController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+      
 
         // GET: RhController/Delete/5
         public ActionResult Delete(int id)
