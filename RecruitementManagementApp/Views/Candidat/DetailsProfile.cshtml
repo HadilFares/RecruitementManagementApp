@@ -1,0 +1,54 @@
+﻿@model RecruitementManagementApp.Models.Candidat
+
+@{
+    ViewData["Title"] = "DetailsProfile";
+}
+
+<h1>DetailsProfile</h1>
+
+<div>
+    <h4>Candidat</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateNaiss)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateNaiss)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.University)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.University)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Langage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Langage)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Stagesexpercience)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Stagesexpercience)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Githuburl)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Githuburl)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Frameworks)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Frameworks)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="EditProfile" asp-controller="Candidat" asp-route-id="@Model?.IdCandidat">Edit</a> |
+    <a asp-action="AllOffres" asp-controller="Candidat">Back to List</a>
+</div>

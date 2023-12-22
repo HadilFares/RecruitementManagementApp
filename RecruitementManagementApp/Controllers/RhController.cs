@@ -59,6 +59,14 @@ namespace RecruitementManagementApp.Controllers
              .Include(co => co.Offre.candidatOffres)
              .ThenInclude(co => co.Candidat)
              .ToList();
+
+            var candidatIds = candidatures.Select(co => co.Candidat.IdCandidat).ToList();
+            var users = _context.Users.Where(u => candidatIds.Contains(u.Id)).ToList();
+
+            // Use ViewData to pass the list of users to the view
+            ViewData["Users"] = new SelectList(users, "Id", "Name", "LastName", "Numero");
+            ViewBag.SelectedUser = users.FirstOrDefault();
+
             return View("lescandidaturesSelonOffre", candidatures);
 
 
@@ -113,63 +121,79 @@ namespace RecruitementManagementApp.Controllers
 
 
 
-
-
-
-        // GET: RhController
-        public ActionResult Index()
+        public async Task<IActionResult> DetailsProfile()
         {
-            return View();
-        }
 
-        // GET: RhController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: RhController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: RhController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null || _context.RHs == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            var recruteur = await _context.RHs
+                .FirstOrDefaultAsync(m => m.IdRh == userId);
+            if (recruteur == null)
             {
-                return View();
+                return NotFound();
             }
+
+            return View(recruteur);
         }
 
+
+
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null || _context.RHs == null)
+            {
+                return NotFound();
+            }
+
+            var rh = await _context.RHs.FindAsync(userId);
+            if (rh == null)
+            {
+                return NotFound();
+            }
+            return View(rh);
+        }
       
-
-        // GET: RhController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: RhController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> EditProfile([Bind("IdRh,Name,adresse,website")] Rh rh)
         {
-            try
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId != rh.IdRh)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    _context.Update(rh);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RhExists(rh.IdRh))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(DetailsProfile));
             }
+            return View(rh);
+        }
+        private bool RhExists(int id)
+        {
+            return (_context.RHs?.Any(e => e.IdRh == id)).GetValueOrDefault();
         }
     }
 }

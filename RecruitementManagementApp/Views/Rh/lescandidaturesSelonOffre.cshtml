@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "lescandidaturesSelonOffre";
+    var users = ViewData["Users"] as SelectList;
 }
 
 <h1>lescandidaturesSelonOffre</h1>
@@ -13,6 +14,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Offre.Title)
             </th>
+            <th>Name</th>
+            <th>LastName</th>
+            <th>Numero</th>
+          
             <th>
                 @Html.DisplayNameFor(model => model.Candidat.Frameworks)
             </th>
@@ -28,21 +33,40 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
+           
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Offre.Title)
-            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Offre.Title)
+                </td>
+                @foreach (var userItem in (IEnumerable<SelectListItem>)ViewData["Users"])
+                {
+                    // var user = (RecruitementManagementApp.Models.User)userItem.Value;
+                    var selectedUser = (RecruitementManagementApp.Models.User)ViewBag.SelectedUser;
+                
+                    <td>
+                            @Html.DisplayFor(modelItem => selectedUser.Name)
+                    </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => selectedUser.LastName)
+                    </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => selectedUser.Numero)
+                    </td>
+
+                
+                }
+          
             <td>
                 @Html.DisplayFor(modelItem => item.Candidat.Frameworks)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Candidat.University)
-            </td  >
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Candidat.Langage)
             </td>  
@@ -52,21 +76,11 @@
              <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-
-               
+              
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { codeOffre = item.codeOffre, IdCandidat = item.IdCandidat }) 
                 </td>
-              @*   <td>
-                    <select asp-for="@item.Status" asp-items="Html.GetEnumSelectList<RecruitementManagementApp.Models.ApplicationStatus>()">
-                        <option value=""></option>
-                    </select>
-                </td> *@
-           @*  <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.PrimaryKey }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td> *@
+             
         </tr>
 }
     </tbody>
