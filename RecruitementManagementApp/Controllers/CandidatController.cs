@@ -161,68 +161,79 @@ namespace RecruitementManagementApp.Controllers
 
         // GET: CandidatController/Details/5
 
-
-        // GET: CandidatController/Create
-        public ActionResult Create()
+        public async Task<IActionResult> DetailsProfile()
         {
-            return View();
-        }
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null || _context.Candidats == null)
+            {
+                return NotFound();
+            }
 
-        // POST: CandidatController/Create
+            var candidat = await _context.Candidats
+                .FirstOrDefaultAsync(m => m.IdCandidat == userId);
+            if (candidat == null)
+            {
+                return NotFound();
+            }
+
+            return View(candidat);
+        }
+        // GET: test/Edit/5
+        public async Task<IActionResult> EditProfile()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null || _context.Candidats == null)
+            {
+                return NotFound();
+            }
+
+            var candidat = await _context.Candidats.FindAsync(userId);
+            if (candidat == null)
+            {
+                return NotFound();
+            }
+            return View(candidat);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> EditProfile([Bind("IdCandidat,DateNaiss,University,Langage,Stagesexpercience,Githuburl,Frameworks")] Candidat candidat)
         {
-            try
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId != candidat.IdCandidat)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+           try
             {
-                return View();
+                try
+                {
+                    _context.Update(candidat);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CandidatExists(candidat.IdCandidat))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(DetailsProfile));
             }
+            catch { 
+            return View(candidat);}
+        }
+        private bool CandidatExists(int id)
+        {
+            return (_context.Candidats?.Any(e => e.IdCandidat == id)).GetValueOrDefault();
         }
 
-        // GET: CandidatController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: CandidatController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CandidatController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CandidatController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

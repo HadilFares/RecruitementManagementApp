@@ -1,0 +1,56 @@
+﻿@model RecruitementManagementApp.Models.Candidat
+
+@{
+    ViewData["Title"] = "EditProfile";
+}
+
+<h1>EditProfile</h1>
+
+<h4>Candidat</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditProfile">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdCandidat" />
+            <div class="form-group">
+                <label asp-for="DateNaiss" class="control-label"></label>
+                <input asp-for="DateNaiss" class="form-control" />
+                <span asp-validation-for="DateNaiss" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="University" class="control-label"></label>
+                <input asp-for="University" class="form-control" />
+                <span asp-validation-for="University" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Langage" class="control-label"></label>
+                <input asp-for="Langage" class="form-control" />
+                <span asp-validation-for="Langage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stagesexpercience" class="control-label"></label>
+                <input asp-for="Stagesexpercience" class="form-control" />
+                <span asp-validation-for="Stagesexpercience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Githuburl" class="control-label"></label>
+                <input asp-for="Githuburl" class="form-control" />
+                <span asp-validation-for="Githuburl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Frameworks" class="control-label"></label>
+                <input asp-for="Frameworks" class="form-control" />
+                <span asp-validation-for="Frameworks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="DetailsProfile" asp-controller="Candidat">Back to Profile</a>
+</div>
+
