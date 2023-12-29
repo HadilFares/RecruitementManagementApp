@@ -30,15 +30,20 @@ namespace RecruitementManagementApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(User user)
         {
-            if (_context.Users.Any(u => u.Email == user.Email))
-            {
-                ModelState.AddModelError("Email", "Email is already taken.");
-                return View(user);
-            }
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return RedirectToAction("Login", "User"); ;
+            if (ModelState.IsValid)
+            {
+                if (_context.Users.Any(u => u.Email == user.Email))
+                {
+                    ModelState.AddModelError("Email", "Email is already taken.");
+                    return View(user);
+                }
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                return RedirectToAction("Login", "User");
+            }
+            return View(user);
         }
 
         //
@@ -94,12 +99,7 @@ namespace RecruitementManagementApp.Controllers
                 {
                     return RedirectToAction("CompeleteProfile", "Candidat");
                 }
-                // Redirect to a protected resource or the home page after successful login
-                // return RedirectToPage("Index", "Offres");
-
-                //  return RedirectToAction("Index", "Offres");
-
-                //return RedirectToAction("CompleteProfile", "Rh");
+                
                 return RedirectToAction("AllOffres", "Candidat");
             }
         }

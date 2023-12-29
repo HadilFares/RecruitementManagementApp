@@ -25,28 +25,30 @@ namespace RecruitementManagementApp.Controllers
         public IActionResult CompeleteProfile(Rh rh)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-
-
-            if (userId.HasValue)
+            if (ModelState.IsValid)
             {
-                rh.IdRh= userId.Value;
-             
-                _context.RHs.Add(rh);
-                _context.SaveChanges();
-                var user = _context.Users.Find(userId);
-                if (user != null)
+                if (userId.HasValue)
                 {
-                    user.profilecompleted = true;
+                    rh.IdRh = userId.Value;
+
+                    _context.RHs.Add(rh);
                     _context.SaveChanges();
+                    var user = _context.Users.Find(userId);
+                    if (user != null)
+                    {
+                        user.profilecompleted = true;
+                        _context.SaveChanges();
+                    }
+
+
+
                 }
 
 
-                
+
+                return RedirectToAction("Index", "Offres");
             }
-
-
-
-            return RedirectToAction("Index", "Offres");
+            return View(rh);
         }
 
 

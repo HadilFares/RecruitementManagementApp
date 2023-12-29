@@ -33,29 +33,32 @@ namespace RecruitementManagementApp.Controllers
         public IActionResult CompeleteProfile(Candidat cd)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-
-
-            if (userId.HasValue)
+            if (cd.DateNaiss!=null||cd.Stagesexpercience!=null||cd.Frameworks!=null||cd.Langage!=null||cd.University!=null)
             {
 
-                cd.IdCandidat = userId.Value;
 
-                _context.Candidats.Add(cd);
-                _context.SaveChanges();
-                var user = _context.Users.Find(userId);
-                if (user != null)
+                if (userId.HasValue)
                 {
-                    user.profilecompleted = true;
+
+                    cd.IdCandidat = userId.Value;
+
+                    _context.Candidats.Add(cd);
                     _context.SaveChanges();
+                    var user = _context.Users.Find(userId);
+                    if (user != null)
+                    {
+                        user.profilecompleted = true;
+                        _context.SaveChanges();
+                    }
+
+
                 }
+                
 
 
-                // ... the rest of your code ...
+                return RedirectToAction("AllOffres", "Candidat");
             }
-
-
-
-            return RedirectToAction("AllOffres", "Offres");
+            return View(cd);
         }
 
 

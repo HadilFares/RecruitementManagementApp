@@ -66,6 +66,23 @@ namespace RecruitementManagementApp.Models
           .HasColumnName("PasswordUser")
           .HasMaxLength(20)
           .IsRequired();
+
+            modelBuilder.Entity<Candidat>().Property(p => p.University)
+              .HasColumnName("University")
+              .HasMaxLength(20)
+              .IsRequired();
+            modelBuilder.Entity<Candidat>().Property(p => p.Frameworks)
+             .HasColumnName("Frameworks")
+             .HasMaxLength(20)
+             .IsRequired();
+            modelBuilder.Entity<Candidat>().Property(p => p.DateNaiss)
+            .HasColumnName("DateNaiss")
+            .HasMaxLength(20)
+            .IsRequired();
+            modelBuilder.Entity<Candidat>().Property(p => p.Stagesexpercience)
+          .HasColumnName("StagesExpercience")
+          .HasMaxLength(100)
+          .IsRequired();
         }
 
 
